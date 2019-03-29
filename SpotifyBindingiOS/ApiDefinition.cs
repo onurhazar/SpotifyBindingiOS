@@ -40,8 +40,8 @@ namespace SpotifyBindingiOS
     }
 
     // @protocol SPTAppRemoteDelegate <NSObject>
-    [Protocol, Model]
     [BaseType(typeof(NSObject))]
+    [Model, Protocol]
     interface SPTAppRemoteDelegate
     {
         // @required -(void)appRemoteDidEstablishConnection:(SPTAppRemote * _Nonnull)appRemote;
@@ -59,6 +59,8 @@ namespace SpotifyBindingiOS
         [Export("appRemote:didDisconnectWithError:")]
         void DidDisconnectWithError(SPTAppRemote appRemote, [NullAllowed] NSError error);
     }
+
+    interface ISPTAppRemoteDelegate { }
 
     // @interface SPTAppRemote : NSObject
     [BaseType(typeof(NSObject))]
@@ -101,7 +103,7 @@ namespace SpotifyBindingiOS
 
         [Wrap("WeakDelegate")]
         [NullAllowed]
-        SPTAppRemoteDelegate Delegate { get; set; }
+        ISPTAppRemoteDelegate Delegate { get; set; }
 
         // @property (nonatomic, weak) id<SPTAppRemoteDelegate> _Nullable delegate;
         [NullAllowed, Export("delegate", ArgumentSemantic.Weak)]
@@ -142,7 +144,7 @@ namespace SpotifyBindingiOS
     }
 
     // typedef void (^SPTAppRemoteCallback)(id _Nullable, NSError * _Nullable);
-    delegate void SPTAppRemoteCallback([NullAllowed] NSObject arg0, [NullAllowed] NSError arg1);
+    delegate void SPTAppRemoteCallback([NullAllowed] NSObject obj, [NullAllowed] NSError error);
 
     // @interface SPTAppRemoteConnectionParams : NSObject
     [BaseType(typeof(NSObject))]
@@ -233,6 +235,8 @@ namespace SpotifyBindingiOS
 
     interface ISPTAppRemotePlayerStateDelegate { }
 
+    interface ISPTAppRemotePlayerAPI { }
+
     // @protocol SPTAppRemotePlayerAPI <NSObject>
     [Protocol, Model]
     [BaseType(typeof(NSObject))]
@@ -244,7 +248,7 @@ namespace SpotifyBindingiOS
         ISPTAppRemotePlayerStateDelegate Delegate { get; set; }
 
         // @required @property (nonatomic, weak) id<SPTAppRemotePlayerStateDelegate> _Nullable delegate;
-        [Abstract]
+        //[Abstract]
         [NullAllowed, Export("delegate", ArgumentSemantic.Weak)]
         NSObject WeakDelegate { get; set; }
 
@@ -350,6 +354,8 @@ namespace SpotifyBindingiOS
         void DidReceiveCapabilities(SPTAppRemoteUserAPI userAPI, SPTAppRemoteUserCapabilities capabilities);
     }
 
+    interface ISPTAppRemoteUserAPIDelegate { }
+
     // @protocol SPTAppRemoteUserAPI <NSObject>
     [Protocol, Model]
     [BaseType(typeof(NSObject))]
@@ -358,10 +364,10 @@ namespace SpotifyBindingiOS
         //[Wrap("WeakDelegate"), Abstract]
         [Wrap("WeakDelegate")]
         [NullAllowed]
-        SPTAppRemoteUserAPIDelegate Delegate { get; set; }
+        ISPTAppRemoteUserAPIDelegate Delegate { get; set; }
 
         // @required @property (readwrite, nonatomic, weak) id<SPTAppRemoteUserAPIDelegate> _Nullable delegate;
-        [Abstract]
+        //[Abstract]
         [NullAllowed, Export("delegate", ArgumentSemantic.Weak)]
         NSObject WeakDelegate { get; set; }
 
