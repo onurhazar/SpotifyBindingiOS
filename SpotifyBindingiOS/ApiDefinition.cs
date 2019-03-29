@@ -749,10 +749,8 @@ namespace SpotifyBindingiOS
     }
 
     // @interface SPTSessionManager : NSObject
-    //[BaseType(typeof(NSObject))]
-    [BaseType(typeof(NSObject),
-    Delegates = new string[] { "WeakDelegate" },
-    Events = new Type[] { typeof(SPTSessionManagerDelegate) })]
+    [BaseType(typeof(NSObject))]
+    //[BaseType(typeof(NSObject), Delegates = new string[] { "WeakDelegate" }, Events = new Type[] { typeof(SPTSessionManagerDelegate) })]
     [DisableDefaultCtor]
     interface SPTSessionManager
     {
@@ -760,13 +758,13 @@ namespace SpotifyBindingiOS
         [NullAllowed, Export("session", ArgumentSemantic.Assign)]
         SPTSession Session { get; set; }
 
-        [Wrap("WeakDelegate")]
-        [NullAllowed]
-        ISPTSessionManagerDelegate Delegate { get; set; }
-
         // @property (nonatomic, weak) id<SPTSessionManagerDelegate> _Nullable delegate;
         [NullAllowed, Export("delegate", ArgumentSemantic.Weak)]
         NSObject WeakDelegate { get; set; }
+
+        [Wrap("WeakDelegate")]
+        [NullAllowed]
+        SPTSessionManagerDelegate Delegate { get; set; }
 
         // @property (readonly, getter = isSpotifyAppInstalled, nonatomic) BOOL spotifyAppInstalled;
         [Export("spotifyAppInstalled")]
@@ -802,30 +800,32 @@ namespace SpotifyBindingiOS
 
         // -(BOOL)application:(UIApplication * _Nonnull)application openURL:(NSURL * _Nonnull)URL options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> * _Nonnull)options;
         [Export("application:openURL:options:")]
-        bool Application(UIApplication application, NSUrl URL, NSDictionary<NSString, NSObject> options);
+        bool Application(UIApplication application, NSUrl URL, NSDictionary options);
     }
 
     // @protocol SPTSessionManagerDelegate <NSObject>
-    [Protocol, Model]
     [BaseType(typeof(NSObject))]
+    [Model, Protocol]
     interface SPTSessionManagerDelegate
     {
         // @required -(void)sessionManager:(SPTSessionManager * _Nonnull)manager didInitiateSession:(SPTSession * _Nonnull)session;
         [Abstract]
-        [Export("sessionManager:didInitiateSession:"), EventArgs("DidInitiateSession"), EventName("DidInitiateSession")]
+        //[Export("sessionManager:didInitiateSession:"), EventArgs("DidInitiateSession"), EventName("DidInitiateSession")]
+        [Export("sessionManager:didInitiateSession:")]
         void DidInitiateSession(SPTSessionManager manager, SPTSession session);
 
         // @required -(void)sessionManager:(SPTSessionManager * _Nonnull)manager didFailWithError:(NSError * _Nonnull)error;
         [Abstract]
-        [Export("sessionManager:didFailWithError:"), EventArgs("DidFailWithError"), EventName("DidFailWithError")]
+        [Export("sessionManager:didFailWithError:")]
         void DidFailWithError(SPTSessionManager manager, NSError error);
 
         // @optional -(void)sessionManager:(SPTSessionManager * _Nonnull)manager didRenewSession:(SPTSession * _Nonnull)session;
-        [Export("sessionManager:didRenewSession:"), EventArgs("DidRenewSession"), EventName("DidRenewSession")]
+        [Export("sessionManager:didRenewSession:")]
         void DidRenewSession(SPTSessionManager manager, SPTSession session);
 
         // @optional -(BOOL)sessionManager:(SPTSessionManager * _Nonnull)manager shouldRequestAccessTokenWithAuthorizationCode:(SPTAuthorizationCode _Nonnull)code;
-        [Export("sessionManager:shouldRequestAccessTokenWithAuthorizationCode:"), DelegateName("ShouldRequestAccessTokenWithAuthorizationCode"), DefaultValue(false)]
+        //[Export("sessionManager:shouldRequestAccessTokenWithAuthorizationCode:"), DelegateName("ShouldRequestAccessTokenWithAuthorizationCode"), DefaultValue(false)]
+        [Export("sessionManager:shouldRequestAccessTokenWithAuthorizationCode:")]
         bool ShouldRequestAccessTokenWithAuthorizationCode(SPTSessionManager manager, string code);
     }
 
