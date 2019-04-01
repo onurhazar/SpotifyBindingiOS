@@ -146,6 +146,8 @@ namespace SpotifyBindingiOS
     // typedef void (^SPTAppRemoteCallback)(id _Nullable, NSError * _Nullable);
     delegate void SPTAppRemoteCallback([NullAllowed] NSObject obj, [NullAllowed] NSError error);
 
+    delegate void SPTAppRemotePlayerStateCallback([NullAllowed] ISPTAppRemotePlayerState obj, [NullAllowed] NSError error);
+
     // @interface SPTAppRemoteConnectionParams : NSObject
     [BaseType(typeof(NSObject))]
     [DisableDefaultCtor]
@@ -312,7 +314,7 @@ namespace SpotifyBindingiOS
         // @required -(void)getPlayerState:(SPTAppRemoteCallback _Nullable)callback;
         [Abstract]
         [Export("getPlayerState:")]
-        void GetPlayerState([NullAllowed] SPTAppRemoteCallback callback);
+        void GetPlayerState([NullAllowed] SPTAppRemotePlayerStateCallback callback);
 
         // @required -(void)subscribeToPlayerState:(SPTAppRemoteCallback _Nullable)callback;
         [Abstract]
